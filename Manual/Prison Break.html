@@ -10,7 +10,7 @@
     <script src="js/ktane-utils.js"></script>
     <style>
         .a {
-            font-size: 13px;
+            font-size: 13.5px;
           }
     </style>
 </head>
@@ -53,7 +53,7 @@
                     <li>Note that you should <strong>never</strong> remove leading zeroes unless stated otherwise.</li>
                 </ul>
                 <ul class="a">
-                    <li>Firstly, we will modify the serial number. Convert all letters into their respective alphabetic positions (A = 1, B = 2, etc.) and concatenate them together, without changing their order.</li>
+                    <li>Firstly, we will modify the serial number. Concatenate each character in the serial number to form a number, with all letters converted to their alphabetic positions (A = 1, B = 2, etc.)</li>
                     <li>Go through each digit from left to right, starting from the second digit. If the digit directly to the left of this one is even, add 5 to this digit, modulo 10.(For example, 12345 would be changed to 12895)</li>
                     <li>Now, from now on:
                     <ul>

@@ -160,7 +160,7 @@ public class prisonBreakScript : MonoBehaviour
         0, 0, 5, 0, 11, 6, 7, 5, 8, 8, 7, 10, 7, 3, 5, 6, 6, 9, 1, 6, 0, 11, 0, 8, 3, 11, 2, 5, 10, 5,
         6, 5, 4, 6, 3, 3, 7, 3, 8, 8, 3, 9, 2, 7, 1, 1, 6, 0, 8, 0, 9, 10, 7, 10, 2, 11, 11, 6, 11, 7, 
         5, 11, 5, 1, 10, 1, 10, 8, 3, 7, 1, 6, 5, 4, 11, 3, 0, 5, 1, 9, 11, 11, 0, 4, 4, 9, 3, 10, 7, 10,
-        0, 4, 0, 9, 2, 5, 3, 2, 3, 9, 4, 6, 4, 11, 5, 1, 5, 8, 7, 0, 7, 3, 8, 6, 8, 10, 10, 10, 11, 0, 11, 8
+        0, 4, 2, 5, 3, 2, 3, 9, 4, 6, 4, 11, 5, 1, 5, 8, 7, 0, 7, 3, 8, 6, 8, 10, 10, 10, 11, 0, 11, 8
     };     
     private int cell;
     private int currentPos;
@@ -532,12 +532,6 @@ public class prisonBreakScript : MonoBehaviour
             }
             if (i == goalPath.Count - 1) { decryptedPath.Add(goalPath[i]); }
         }
-        StringBuilder logDirections = new StringBuilder();
-        foreach (int k in decryptedPath)//For logging
-        {
-            logDirections.AppendFormat(" {0}", fullDirections[k]);
-        }
-        Debug.LogFormat("[Prison Break #{0}] The full decrypted path is{1}, getting the prisoner to {2}.", moduleId, logDirections.ToString(), alphabet[(goalPos % 25 - 1) / 2] + ((goalPos / 25 - 1) / 2 + 1).ToString());
     }
 
     void arrowModification()
@@ -611,6 +605,12 @@ public class prisonBreakScript : MonoBehaviour
             sb.AppendFormat(" {0}", fullDirections[k]);
         }
         Debug.LogFormat("[Prison Break #{0}] The shown encrypted directions are {1}.", moduleId, sb.ToString());
+        StringBuilder logDirections = new StringBuilder();
+        foreach (int k in decryptedPath)//For logging
+        {
+            logDirections.AppendFormat(" {0}", fullDirections[k]);
+        }
+        Debug.LogFormat("[Prison Break #{0}] The full decrypted path is{1}, getting the prisoner to {2}.", moduleId, logDirections.ToString(), alphabet[(goalPos % 25 - 1) / 2] + ((goalPos / 25 - 1) / 2 + 1).ToString());
         StartCoroutine(arrowSequenceFlash());
     }
 
@@ -738,5 +738,86 @@ public class prisonBreakScript : MonoBehaviour
             StartCoroutine(Escape());
         }
     }
+    //Twitch Plays
+#pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"<!{0} start> to sound the alarms, <!{0} urdl> to move up right down left, <!{0} submit> to press the display";
+#pragma warning restore 414
 
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        yield return null;
+        command = command.ToLowerInvariant();
+        if (command == "start")
+        {
+            module.GetComponent<KMSelectable>().OnInteract();
+            yield return "strike";
+            yield return "solve";
+        }
+        else
+        {
+            if (moduleActivated)
+            {
+                string[] parameters = command.Split(' ');
+                if (parameters.Length == 1)
+                {
+                    if (Regex.IsMatch(parameters[0], @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+                    {
+                        jail.OnInteract();
+                        yield return null;
+                    }
+                    else if (!cooldown)
+                    {
+                        List<KMSelectable> movement = new List<KMSelectable>();
+                        for (int i = 0; i < command.Length; i++)
+                        {
+                            switch (command[i])
+                            {
+                                case 'u':
+                                case 'n':
+                                    movement.Add(arrowButtons[0]);
+                                    break;
+                                case 'r':
+                                case 'e':
+                                    movement.Add(arrowButtons[1]);
+                                    break;
+                                case 'd':
+                                case 's':
+                                    movement.Add(arrowButtons[2]);
+                                    break;
+                                case 'l':
+                                case 'w':
+                                    movement.Add(arrowButtons[3]);
+                                    break;
+                                default:
+                                    yield return "sendtochaterror One of the characters in the command is invalid.";
+                                    yield break;
+                            }
+                        }
+                        int counter = 0;
+                        foreach (KMSelectable btn in movement)
+                        {
+                            btn.OnInteract();
+                            if (cooldown)
+                            {
+                                yield return "sendtochaterror Movement #" + counter + " caused you to hit a wall!";
+                                yield break;
+                            }
+                            counter++;
+                            yield return new WaitForSeconds(0.1f);
+                        }
+                    }
+                    else
+                    {
+                        yield return "sendtochaterror Movement cooldown is still activated!";
+                        yield break;
+                    }
+                }
+            }
+            else
+            {
+                yield return "sendtochaterror The alarms are not activated yet.";
+                yield break;
+            }
+        }
+    }
 }
