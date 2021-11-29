@@ -258,7 +258,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1700980896301282
 GameObject:
   m_ObjectHideFlags: 0
@@ -2239,13 +2239,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 0}
   Children:
-  - {fileID: 114834156610064404}
+  - {fileID: 0}
   - {fileID: 114758748955147374}
+  - {fileID: 0}
   - {fileID: 114243663801425082}
-  - {fileID: 114828313555606706}
   - {fileID: 114998797353775162}
+  - {fileID: 114834156610064404}
+  - {fileID: 0}
+  - {fileID: 114828313555606706}
+  - {fileID: 0}
   IsPassThrough: 0
-  ChildRowLength: 0
+  ChildRowLength: 3
   Highlight: {fileID: 114047017664487596}
   SelectableColliders: []
   DefaultSelectableIndex: 0

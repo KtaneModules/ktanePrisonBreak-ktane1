@@ -820,4 +820,78 @@ public class prisonBreakScript : MonoBehaviour
             }
         }
     }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (reset) yield return true;
+        if (!moduleActivated)
+            module.GetComponent<KMSelectable>().OnInteract();
+        if (!moduleSolved)
+        {
+            while (isAnimating || cooldown) yield return null;
+            var q = new Queue<int>();
+            var allMoves = new List<Movement>();
+            q.Enqueue(currentPos);
+            while (q.Count > 0)
+            {
+                var next = q.Dequeue();
+                if (next == goalPos)
+                    goto readyToSubmit;
+                var allDirections = "URDL";
+                var offsets = new int[] { -25, 1, 25, -1 };
+                string paths = "";
+                for (int i = 0; i < 4; i++)
+                {
+                    switch (maze[mazeId][next + offsets[i]])
+                    {
+                        case ' ':
+                            paths += allDirections[i];
+                            break;
+                    }
+                }
+                var cell = paths;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (cell.Contains(allDirections[i]) && !allMoves.Any(x => x.start == next + offsets[i] * 2))
+                    {
+                        q.Enqueue(next + offsets[i] * 2);
+                        allMoves.Add(new Movement(next, next + offsets[i] * 2, i));
+                    }
+                }
+            }
+            throw new InvalidOperationException("There is a bug in Prison Break's TP autosolver.");
+            readyToSubmit:
+            if (allMoves.Count != 0) // Checks for position already being target
+            {
+                var lastMove = allMoves.First(x => x.end == goalPos);
+                var relevantMoves = new List<Movement> { lastMove };
+                while (lastMove.start != currentPos)
+                {
+                    lastMove = allMoves.First(x => x.end == lastMove.start);
+                    relevantMoves.Add(lastMove);
+                }
+                for (int i = 0; i < relevantMoves.Count; i++)
+                {
+                    arrowButtons[relevantMoves[relevantMoves.Count - 1 - i].direction].OnInteract();
+                    yield return new WaitForSeconds(.1f);
+                }
+            }
+            jail.OnInteract();
+        }
+        while (isAnimating) yield return true;
+    }
+
+    class Movement
+    {
+        public int start { get; set; }
+        public int end { get; set; }
+        public int direction { get; set; }
+
+        public Movement(int s, int e, int d)
+        {
+            start = s;
+            end = e;
+            direction = d;
+        }
+    }
 }
