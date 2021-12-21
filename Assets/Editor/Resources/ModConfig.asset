@@ -24,6 +24,6 @@ MonoBehaviour:
     Mod ID: prisonBreak
 
     Manual Link: https://ktane.timwi.de/HTML/Prison%20Break.html'
-  version: 1.2.1
+  version: 1.2.2
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 096eacf36f2cad5419faf837feca815d, type: 3}

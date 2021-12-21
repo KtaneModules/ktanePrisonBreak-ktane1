@@ -636,7 +636,7 @@ public class prisonBreakScript : MonoBehaviour
 
     void submit()
     {
-        if (!isAnimating && !moduleSolved && !reset)
+        if (!isAnimating && !moduleSolved && !reset && !cooldown)
         {
             moduleActivated = false;
             timer.text = "";
