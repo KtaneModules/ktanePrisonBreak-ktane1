@@ -692,10 +692,45 @@ public class prisonBreakScript : MonoBehaviour
             module.HandlePass();
             timer.text = "GG";
             timer.color = new Color(0f, 1f, 0f, 1f);
-            leftScreen.text = "GOOD";
             leftScreen.color = new Color(0f, 1f, 0f, 1f);
-            rightScreen.text = "JOB";
             rightScreen.color = new Color(0f, 1f, 0f, 1f);
+
+            int solvePhrases = UnityEngine.Random.Range(0, 8);
+            switch (solvePhrases)
+            {
+                case 0:
+                    leftScreen.text = "GOOD";
+                    rightScreen.text = "JOB";
+                    break;
+                case 1:
+                    leftScreen.text = "NICE";
+                    rightScreen.text = "WORK";
+                    break;
+                case 2:
+                    leftScreen.text = "POG";
+                    rightScreen.text = "GERS";
+                    break;
+                case 3:
+                    leftScreen.text = "LET'S";
+                    rightScreen.text = "GOOOO";
+                    break;
+                case 4:
+                    leftScreen.text = "PAIN";
+                    rightScreen.text = "PEKO";
+                    break;
+                case 5:
+                    leftScreen.text = "BREAK";
+                    rightScreen.text = "TIME";
+                    break;
+                case 6:
+                    leftScreen.text = "ESCAPE";
+                    rightScreen.text = "FAILED";
+                    break;
+                case 7:
+                    leftScreen.text = "COOL";
+                    rightScreen.text = "BEANS";
+                    break;
+            }
         }
     }
 
