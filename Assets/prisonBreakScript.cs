@@ -554,16 +554,16 @@ public class prisonBreakScript : MonoBehaviour
                 initialString = sb.ToString();
                 sb.Remove(0, sb.Length);
             }
+            sb.Append(initialString);
             if (initialString.Length < decryptedPath.Count)
             {
-                sb.Append(initialString);
                 for (int i = 0; i < initialString.Length; i++)
                 {
-                    sb.Append((initialString[i] + 1) % 10);                   
+                    sb.Append(((initialString[i] - '0' + 1) % 10).ToString());
                 }
-                initialString = sb.ToString();
-                sb.Remove(0, sb.Length);
             }
+            initialString = sb.ToString();
+            sb.Remove(0, sb.Length);
         }
         Debug.LogFormat("[Prison Break #{0}] Applying the third instruction: {1}.", moduleId, initialString);
         for (int i = (initialString.Length - decryptedPath.Count) / 2; i < initialString.Length - (initialString.Length - decryptedPath.Count) / 2; i++)//Taking the middle string
@@ -582,7 +582,6 @@ public class prisonBreakScript : MonoBehaviour
             }
             else if(initialString[i] == '2' || initialString[i] == '3' || initialString[i] == '7')
             {
-
                 encryptedPath.Add((decryptedPath[i] + 4) % 8);
             }
             else
