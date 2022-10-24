@@ -271,7 +271,7 @@ public class prisonBreakScript : MonoBehaviour
 
     IEnumerator Escape()
     {
-        int waitForIt = UnityEngine.Random.Range(0, 5);
+        float waitForIt = UnityEngine.Random.Range(1f, 3f);
         cell = UnityEngine.Random.Range(0, 15);
         goalPos = 25 * (2 * cellNumber[30 * mazeId + cell * 2] + 1) + 2 * cellNumber[30 * mazeId + cell * 2 + 1] + 1;
         var sn = bomb.GetSerialNumber();
@@ -339,7 +339,7 @@ public class prisonBreakScript : MonoBehaviour
             {
                 audio.PlaySoundAtTransform("Wall hit", transform);
                 Debug.LogFormat("<Prison Break #{0}> You hit a wall! Cooldown activated!", moduleId);
-                StartCoroutine(cooldownTimer());
+                StartCoroutine("cooldownTimer");
             }
             else
             {
@@ -635,7 +635,7 @@ public class prisonBreakScript : MonoBehaviour
 
     void submit()
     {
-        if (!isAnimating && !moduleSolved && !reset && !cooldown)
+        if (!isAnimating && !moduleSolved && !reset && !cooldown && moduleActivated)
         {
             moduleActivated = false;
             timer.text = "";
@@ -751,6 +751,13 @@ public class prisonBreakScript : MonoBehaviour
                 Debug.LogFormat("[Prison Break #{0}] Time has ran out, and the prisoner has escaped! Strike!", moduleId);
                 module.HandleStrike();
                 reset = true;
+                moduleActivated = false;
+                timer.text = "";
+                leftScreen.text = "";
+                rightScreen.text = "";
+                StopCoroutine("cooldownTimer");
+                cooldown = false;
+                rightScreen.color = new Color(1f, 0f, 0f, 1f);
                 StartCoroutine(Timer());
                 StartCoroutine(CloseAnim());
             }
